@@ -1,0 +1,16 @@
+- name: Fetch lua
+  ansible.builtin.git:
+    repo: 'https://github.com/LuaLS/lua-language-server'
+    recursive: yes
+    dest: "{{ personal }}/lua/"
+  tags: 
+    - install
+    - lsp
+
+- name: Build lua
+  ansible.builtin.shell:
+    cmd: ./make.sh
+    chdir: "{{ personal }}/lua/"
+  tags:
+    - install
+    - lsp
