@@ -1,0 +1,20 @@
+- hosts: localhost
+  vars:
+    curr_user: "{{ lookup('env', 'USER') }}"
+    personal: "{{ lookup('env', 'HOME') }}/projects"
+  pre_tasks:
+  - name: Update Apt
+    become: true
+    apt:
+      force_apt_get: true
+      update_cache: true
+      state: present
+    tags:
+      - install
+      - core
+  tasks:
+    - include_tasks: tasks/core-setup.yml
+    - include_tasks: tasks/zsh-setup.yml
+    - include_tasks: tasks/nvim-setup.yml
+    - include_tasks: tasks/productivity-tools.yml
+    - include_tasks: tasks/lsp.yml
