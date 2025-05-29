@@ -28,6 +28,8 @@
   become: true
   pacman:
     name:
+      - man
+      - vi
       - picom         
       - curl
       - htop
@@ -40,6 +42,7 @@
       - dconf-editor
       - moreutils
       - clang
+      - less
   tags:
     - install
     - core
