@@ -1,0 +1,59 @@
+- name: Remove existing Neovim build directory
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/neovim"
+    state: absent
+  tags:
+    - install
+    - neovim
+
+- name: Clone packer.nvim (Neovim plugin manager)
+  ansible.builtin.git:
+    repo: 'https://github.com/wbthomason/packer.nvim'
+    dest: "{{ lookup('env', 'HOME') }}/.local/share/nvim/site/pack/packer/start/packer.nvim"
+    update: yes
+  tags:
+    - install
+    - neovim
+
+- name: Clone Neovim source
+  ansible.builtin.git:
+    repo: 'https://github.com/neovim/neovim.git'
+    dest: "{{ lookup('env', 'HOME') }}/neovim"
+    update: yes
+  tags:
+    - install
+    - neovim
+
+- name: Build Neovim
+  ansible.builtin.shell:
+    cmd: make -j "{{ ansible_processor_vcpus | default(4) }}"
+    chdir: "{{ lookup('env', 'HOME') }}/neovim"
+  tags:
+    - install
+    - neovim
+
+- name: Install Neovim
+  become: true
+  ansible.builtin.shell:
+    cmd: make install
+    chdir: "{{ lookup('env', 'HOME') }}/neovim"
+  tags:
+    - install
+    - neovim
+
+- name: Install luarocks (Lua package manager)
+  become: true
+  pacman:
+    name: luarocks
+    state: present
+  tags:
+    - install
+    - neovim
+
+- name: Install luacheck (Neovim Lua linter)
+  become: true
+  ansible.builtin.shell: luarocks install luacheck
+  tags:
+    - install
+    - neovim
+

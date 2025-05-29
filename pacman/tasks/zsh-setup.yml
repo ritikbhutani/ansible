@@ -1,0 +1,59 @@
+- name: Install Zsh
+  become: true
+  pacman:
+    name: zsh
+    state: present
+  tags: &tags_for_zsh_tasks ['install', 'productivity', 'dotfiles', 'zsh']
+
+- name: Update permissions on chsh in PAM config (if needed)
+  become: true
+  lineinfile:
+    path: /etc/pam.d/chsh
+    regexp: '^auth\s+required'
+    line: 'auth       sufficient pam_shells.so'
+    backup: yes
+  tags: *tags_for_zsh_tasks
+
+- name: Change default shell to Zsh
+  become: false
+  shell: chsh -s $(which zsh)
+  args:
+    executable: /bin/bash
+  tags: *tags_for_zsh_tasks
+
+- name: Check if Oh My Zsh is already installed
+  ansible.builtin.stat:
+    path: "{{ lookup('env','HOME') }}/.oh-my-zsh"
+  register: oh_my_stats
+  tags: *tags_for_zsh_tasks
+
+- name: Install Oh My Zsh
+  shell: |
+    curl -Lo ~/.oh-my-installer https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+    chmod +x ~/.oh-my-installer
+    RUNZSH=no ~/.oh-my-installer
+  args:
+    executable: /bin/bash
+  when: not oh_my_stats.stat.exists
+  tags: *tags_for_zsh_tasks
+
+- name: Install zsh-autosuggestions
+  ansible.builtin.git:
+    repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+    dest: "{{ lookup('env','HOME') }}/.oh-my-zsh/plugins/zsh-autosuggestions"
+  tags: *tags_for_zsh_tasks
+
+- name: Ensure zsh-autosuggestions not duplicated in .zshrc
+  ansible.builtin.shell: sed -i 's/ zsh-autosuggestions//g' ~/.zshrc || true
+  args:
+    executable: /bin/bash
+  tags: *tags_for_zsh_tasks
+
+- name: Add zsh-autosuggestions to plugin list in .zshrc
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env','HOME') }}/.zshrc"
+    regexp: '^plugins=\((.*)\)'
+    line: "plugins=(git zsh-autosuggestions)"
+    backrefs: yes
+  tags: *tags_for_zsh_tasks
+

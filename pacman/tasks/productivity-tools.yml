@@ -1,0 +1,16 @@
+- name: Install productivity packages
+  become: true
+  pacman:
+    name:
+      - tmux
+      - wireshark-cli
+      - wireshark-qt
+      - fzf
+      - xclip
+      - tldr
+      - ripgrep
+    state: present
+  tags:
+    - install
+    - productivity
+

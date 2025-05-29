@@ -1,0 +1,19 @@
+- hosts: localhost
+  vars:
+    curr_user: "{{ lookup('env', 'USER') }}"
+    personal: "{{ lookup('env', 'HOME') }}/projects"
+
+  pre_tasks:
+    - name: Update Pacman package database
+      become: true
+      pacman:
+        update_cache: true
+      tags:
+        - install
+        - core
+  tasks:
+    - include_tasks: tasks/core-setup.yml
+    - include_tasks: tasks/zsh-setup.yml
+    - include_tasks: tasks/nvim-setup.yml
+    - include_tasks: tasks/productivity-tools.yml
+    - include_tasks: tasks/hyprland.yml

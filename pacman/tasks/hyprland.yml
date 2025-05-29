@@ -1,0 +1,90 @@
+- name: Install essential packages with pacman
+  become: true
+  pacman:
+    name:
+      - nautilus
+      - git
+      - base-devel
+      - stow
+    state: present
+    update_cache: yes
+  tags:
+    - hprland
+    - setup
+
+- name: Check if yay is installed
+  ansible.builtin.command: which yay
+  register: yay_check
+  ignore_errors: yes
+  changed_when: false
+  tags:
+    - hprland
+    - setup
+
+- name: Clone yay-bin AUR repository
+  ansible.builtin.git:
+    repo: https://aur.archlinux.org/yay-bin.git
+    dest: "{{ lookup('env', 'HOME') }}/yay-bin"
+    update: yes
+  when: yay_check.rc != 0
+  tags:
+    - hprland
+    - setup
+
+- name: Build and install yay-bin
+  ansible.builtin.shell: makepkg -si --noconfirm
+  args:
+    chdir: "{{ lookup('env', 'HOME') }}/yay-bin"
+  become: false 
+  when: yay_check.rc != 0
+  tags:
+    - hprland
+    - setup
+
+- name: Remove yay-bin build directory
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/yay-bin"
+    state: absent
+  when: yay_check.rc != 0
+  tags:
+    - hprland
+    - setup
+
+- name: Install additional packages with pacman
+  become: true
+  pacman:
+    name:
+      - wofi
+      - waybar
+      - ttf-font-awesome
+    state: present
+    update_cache: yes
+  tags:
+    - hprland
+    - setup
+
+- name: Get list of installed AUR packages
+  ansible.builtin.shell: yay -Qq
+  register: yay_installed_packages
+  changed_when: false
+  failed_when: false
+  tags:
+    - hprland
+    - setup
+
+- name: Install AUR packages with yay
+  ansible.builtin.shell: >
+    yay -S --noconfirm
+    hyprshot hyprlock hypridle hyprpaper starship nwg-look catppuccin-gtk-theme-mocha
+  when: >
+    "'hyprshot' not in yay_installed_packages.stdout and
+     'hyprlock' not in yay_installed_packages.stdout and
+     'hypridle' not in yay_installed_packages.stdout and
+     'hyprpaper' not in yay_installed_packages.stdout and
+     'starship' not in yay_installed_packages.stdout and
+     'nwg-look' not in yay_installed_packages.stdout and
+     'catppuccin-gtk-theme-mocha' not in yay_installed_packages.stdout"
+  tags:
+    - hprland
+    - setup
+
