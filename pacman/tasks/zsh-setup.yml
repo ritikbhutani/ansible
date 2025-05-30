@@ -57,3 +57,46 @@
     backrefs: yes
   tags: *tags_for_zsh_tasks
 
+- name: Symlink catppuccin theme to root of themes folder
+  ansible.builtin.file:
+    src: "{{ lookup('env','HOME') }}/dev/catppuccin-zsh/catppuccin.zsh-theme"
+    dest: "{{ lookup('env','HOME') }}/.oh-my-zsh/themes/catppuccin.zsh-theme"
+    state: link
+    force: true
+  tags: *tags_for_zsh_tasks
+
+- name: Symlink catppuccin theme flavours to root of themes folder
+  ansible.builtin.file:
+    src: "{{ lookup('env','HOME') }}/dev/catppuccin-zsh/catppuccin-flavors"
+    dest: "{{ lookup('env','HOME') }}/.oh-my-zsh/themes/catppuccin-flavors"
+    state: link
+    force: true
+  tags: *tags_for_zsh_tasks
+
+- name: Set ZSH_THEME in .zshrc
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env','HOME') }}/.zshrc"
+    regexp: '^ZSH_THEME='
+    line: 'ZSH_THEME="catppuccin"'
+    create: yes
+    backup: yes
+  tags: *tags_for_zsh_tasks
+
+- name: Set ZSH_THEME in .zshrc
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env','HOME') }}/.zshrc"
+    regexp: '^CATPPUCCIN_FLAVOR='
+    line: 'CATPPUCCIN_FLAVOR="mocha"'
+    create: yes
+    backup: yes
+  tags: *tags_for_zsh_tasks
+
+- name: Set ZSH_THEME in .zshrc
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env','HOME') }}/.zshrc"
+    regexp: '^CATPPUCCIN_SHOW_TIME='
+    line: 'CATPPUCCIN_SHOW_TIME=true'
+    create: yes
+    backup: yes
+  tags: *tags_for_zsh_tasks
+

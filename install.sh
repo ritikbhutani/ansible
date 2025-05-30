@@ -9,7 +9,7 @@ if [ -f /etc/debian_version ]; then
 	sudo ansible-playbook apt/local.yml
 
 elif [ -f /etc/arch-release ]; then
-    sudo pacman -S --noconfirm ansible
+    sudo pacman -S --needed ansible
 
     ansible-playbook pacman/local.yml
 
