@@ -1,0 +1,17 @@
+- name: Install stow
+  become: true
+  pacman:
+    name:
+      - stow
+    state: present
+    update_cache: yes
+  tags:
+    - install 
+
+- name: Stow dotfiles
+  become: false
+  ansible.builtin.shell:
+    cmd: stow -t $HOME *
+    chdir: "{{ lookup('env', 'HOME') }}/dev/dotfiles"
+  tags:
+    - install

@@ -5,7 +5,6 @@
       - nautilus
       - git
       - base-devel
-      - stow
     state: present
     update_cache: yes
   tags:
