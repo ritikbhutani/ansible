@@ -11,7 +11,16 @@
 - name: Stow dotfiles
   become: false
   ansible.builtin.shell:
-    cmd: stow -t $HOME *
+    cmd: stow -t $HOME $(ls -d */ | grep -v '^bin/$')
     chdir: "{{ lookup('env', 'HOME') }}/dev/dotfiles"
   tags:
     - install
+
+- name: Stow bin 
+  become: true
+  ansible.builtin.shell:
+    cmd: stow -t / bin
+    chdir: "{{ lookup('env', 'HOME') }}/dev/dotfiles"
+  tags:
+    - install
+
