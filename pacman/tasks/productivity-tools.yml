@@ -2,6 +2,7 @@
   become: true
   pacman:
     name:
+      - docker
       - tmux
       - wireshark-cli
       - wireshark-qt

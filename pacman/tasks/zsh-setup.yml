@@ -43,18 +43,10 @@
     dest: "{{ lookup('env','HOME') }}/.oh-my-zsh/plugins/zsh-autosuggestions"
   tags: *tags_for_zsh_tasks
 
-- name: Ensure zsh-autosuggestions not duplicated in .zshrc
-  ansible.builtin.shell: sed -i 's/ zsh-autosuggestions//g' ~/.zshrc || true
+- name: Remove prebuilt zsh 
+  ansible.builtin.shell: rm ~/.zshrc 
   args:
     executable: /bin/bash
-  tags: *tags_for_zsh_tasks
-
-- name: Add zsh-autosuggestions to plugin list in .zshrc
-  ansible.builtin.lineinfile:
-    path: "{{ lookup('env','HOME') }}/.zshrc"
-    regexp: '^plugins=\((.*)\)'
-    line: "plugins=(git zsh-autosuggestions)"
-    backrefs: yes
   tags: *tags_for_zsh_tasks
 
 - name: Symlink catppuccin theme to root of themes folder
@@ -71,32 +63,5 @@
     dest: "{{ lookup('env','HOME') }}/.oh-my-zsh/themes/catppuccin-flavors"
     state: link
     force: true
-  tags: *tags_for_zsh_tasks
-
-- name: Set ZSH_THEME in .zshrc
-  ansible.builtin.lineinfile:
-    path: "{{ lookup('env','HOME') }}/.zshrc"
-    regexp: '^ZSH_THEME='
-    line: 'ZSH_THEME="catppuccin"'
-    create: yes
-    backup: yes
-  tags: *tags_for_zsh_tasks
-
-- name: Set ZSH_THEME in .zshrc
-  ansible.builtin.lineinfile:
-    path: "{{ lookup('env','HOME') }}/.zshrc"
-    regexp: '^CATPPUCCIN_FLAVOR='
-    line: 'CATPPUCCIN_FLAVOR="mocha"'
-    create: yes
-    backup: yes
-  tags: *tags_for_zsh_tasks
-
-- name: Set ZSH_THEME in .zshrc
-  ansible.builtin.lineinfile:
-    path: "{{ lookup('env','HOME') }}/.zshrc"
-    regexp: '^CATPPUCCIN_SHOW_TIME='
-    line: 'CATPPUCCIN_SHOW_TIME=true'
-    create: yes
-    backup: yes
   tags: *tags_for_zsh_tasks
 

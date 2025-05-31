@@ -1,0 +1,5 @@
+- name: Source tmux file 
+  shell: "tmux source-file ~/.tmux.conf"
+
+- name: Install tmux plugins
+  shell: ~/.tmux/plugins/tpm/bin/install_plugins
