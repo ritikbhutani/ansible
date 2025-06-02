@@ -43,6 +43,8 @@
       - moreutils
       - clang
       - less
+      - npm
+      - lua-language-server
   tags:
     - install
     - core
