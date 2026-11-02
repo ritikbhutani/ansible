@@ -1,24 +1,28 @@
-- name: Install essential packages with pacman
+# Hyprland + Serpantinum v2 shell.
+# Serpantinum is built as a pacman package from its repo (not the curl installer):
+# no telemetry, nothing copied into ~/.local/share, upgrades tracked by pacman.
+
+- name: Install Hyprland and build tools
   become: true
   pacman:
     name:
+      - hyprland
+      - xdg-desktop-portal-hyprland
       - nautilus
+      - openrgb
       - git
       - base-devel
+      - jq
     state: present
     update_cache: yes
-  tags:
-    - hprland
-    - setup
+  tags: &tags_hypr ['hyprland', 'setup']
 
 - name: Check if yay is installed
   ansible.builtin.command: which yay
   register: yay_check
   ignore_errors: yes
   changed_when: false
-  tags:
-    - hprland
-    - setup
+  tags: *tags_hypr
 
 - name: Clone yay-bin AUR repository
   ansible.builtin.git:
@@ -26,64 +30,97 @@
     dest: "{{ lookup('env', 'HOME') }}/yay-bin"
     update: yes
   when: yay_check.rc != 0
-  tags:
-    - hprland
-    - setup
+  tags: *tags_hypr
 
 - name: Build and install yay-bin
   ansible.builtin.shell: makepkg -si --noconfirm
   args:
     chdir: "{{ lookup('env', 'HOME') }}/yay-bin"
-  become: false 
+  become: false
   when: yay_check.rc != 0
-  tags:
-    - hprland
-    - setup
+  tags: *tags_hypr
 
 - name: Remove yay-bin build directory
   ansible.builtin.file:
     path: "{{ lookup('env', 'HOME') }}/yay-bin"
     state: absent
   when: yay_check.rc != 0
-  tags:
-    - hprland
-    - setup
+  tags: *tags_hypr
 
-- name: Install additional packages with pacman
+- name: Install AUR packages (serpantinum dependency + personal apps)
+  ansible.builtin.command: >
+    yay -S --needed --noconfirm
+    wl-gammarelay-rs matugen-bin zen-browser-bin catppuccin-gtk-theme-mocha
+  register: yay_install
+  changed_when: "'there is nothing to do' not in yay_install.stdout"
+  become: false
+  tags: *tags_hypr
+
+# ───────── Serpantinum ─────────
+
+- name: Clone serpantinum at the pinned release
+  ansible.builtin.git:
+    repo: https://github.com/ilyamiro/serpantinum.git
+    dest: "{{ serpantinum_src }}"
+    version: "{{ serpantinum_version }}"
+    force: yes          # local PKGBUILD edits below are re-applied every run
+  become: false
+  tags: &tags_serp ['hyprland', 'setup', 'serpantinum']
+
+- name: "PKGBUILD: build the pinned tag instead of master"
+  ansible.builtin.replace:
+    path: "{{ serpantinum_pkgbuild }}"
+    regexp: '^source=\("\$pkgname::git\+\$url\.git"'
+    replace: 'source=("$pkgname::git+$url.git#tag={{ serpantinum_version }}"'
+  tags: *tags_serp
+
+- name: "PKGBUILD: don't build a -debug package"
+  ansible.builtin.lineinfile:
+    path: "{{ serpantinum_pkgbuild }}"
+    insertafter: '^install='
+    line: 'options=(!debug)'
+  tags: *tags_serp
+
+- name: "PKGBUILD: keep nautilus as org.freedesktop.FileManager1 (drop Ski's D-Bus service)"
+  ansible.builtin.lineinfile:
+    path: "{{ serpantinum_pkgbuild }}"
+    insertafter: '^\s+cp -a "\$srcdir/usr/\." "\$pkgdir/usr/"'
+    line: '    rm -f "$pkgdir/usr/share/dbus-1/services/org.freedesktop.FileManager1.service"'
+  tags: *tags_serp
+
+- name: Build and install serpantinum
+  ansible.builtin.command: makepkg -si --noconfirm --needed
+  args:
+    chdir: "{{ serpantinum_src }}/packaging/aur/serpantinum-git"
+  register: serp_build
+  changed_when: "'installing' in serp_build.stdout"
+  become: false
+  tags: *tags_serp
+
+- name: Merge serpantinum default settings (keeps existing values)
+  ansible.builtin.shell: |
+    set -e
+    s="$HOME/.config/serpantinum/settings.json"
+    mkdir -p "$(dirname "$s")"; [ -s "$s" ] || echo '{}' > "$s"
+    jq -s --arg wp "$HOME/Pictures/Wallpapers" '(.[0] * .[1]) * {wallpaperDir: $wp}' \
+      /usr/share/serpantinum/config/serpantinum/settings.json "$s" > "$s.tmp" && mv "$s.tmp" "$s"
+  become: false
+  tags: *tags_serp
+
+- name: Enable nvim colour sync for serpantinum palette changes
+  ansible.builtin.systemd:
+    name: serp-nvim-colors.path
+    scope: user
+    enabled: yes
+    state: started
+    daemon_reload: yes
+  become: false
+  tags: *tags_serp
+
+- name: Enable power-profiles-daemon (used by serpantinum)
   become: true
-  pacman:
-    name:
-      - wofi
-      - waybar
-      - ttf-font-awesome
-    state: present
-    update_cache: yes
-  tags:
-    - hprland
-    - setup
-
-- name: Get list of installed AUR packages
-  ansible.builtin.shell: yay -Qq
-  register: yay_installed_packages
-  changed_when: false
-  failed_when: false
-  tags:
-    - hprland
-    - setup
-
-- name: Install AUR packages with yay
-  ansible.builtin.shell: >
-    yay -S --noconfirm
-    hyprshot hyprlock hypridle hyprpaper starship nwg-look catppuccin-gtk-theme-mocha
-  when: >
-    "'hyprshot' not in yay_installed_packages.stdout and
-     'hyprlock' not in yay_installed_packages.stdout and
-     'hypridle' not in yay_installed_packages.stdout and
-     'hyprpaper' not in yay_installed_packages.stdout and
-     'starship' not in yay_installed_packages.stdout and
-     'nwg-look' not in yay_installed_packages.stdout and
-     'catppuccin-gtk-theme-mocha' not in yay_installed_packages.stdout"
-  tags:
-    - hprland
-    - setup
-
+  ansible.builtin.systemd:
+    name: power-profiles-daemon
+    enabled: yes
+    state: started
+  tags: *tags_serp

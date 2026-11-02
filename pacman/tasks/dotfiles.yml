@@ -5,22 +5,33 @@
       - stow
     state: present
     update_cache: yes
-  tags:
-    - install 
+  tags: &tags_dot ['install', 'dotfiles']
 
-- name: Stow dotfiles
+- name: Refuse to stow over uncommitted dotfiles changes
+  ansible.builtin.command: git status --porcelain
+  args:
+    chdir: "{{ dotfiles_dir }}"
+  register: dotfiles_dirty
+  changed_when: false
+  failed_when: dotfiles_dirty.stdout | length > 0
+  tags: *tags_dot
+
+# --adopt pulls any pre-existing real files (e.g. a distro default ~/.bashrc) into the repo so stow
+# can link over them; the checkout then restores the repo's version. Safe because the repo is clean.
+- name: Stow dotfiles into $HOME (.stowrc adds --no-folding)
+  ansible.builtin.shell: |
+    set -e
+    pkgs=$(ls -d */ | grep -v '^bin/$')
+    stow --adopt --restow -t "$HOME" $pkgs
+    git checkout -- .
+  args:
+    chdir: "{{ dotfiles_dir }}"
   become: false
-  ansible.builtin.shell:
-    cmd: stow -t $HOME $(ls -d */ | grep -v '^bin/$')
-    chdir: "{{ lookup('env', 'HOME') }}/dev/dotfiles"
-  tags:
-    - install
+  tags: *tags_dot
 
-- name: Stow bin 
+- name: Stow bin into /
   become: true
   ansible.builtin.shell:
-    cmd: stow -t / bin
-    chdir: "{{ lookup('env', 'HOME') }}/dev/dotfiles"
-  tags:
-    - install
-
+    cmd: stow --restow -t / bin
+    chdir: "{{ dotfiles_dir }}"
+  tags: *tags_dot
