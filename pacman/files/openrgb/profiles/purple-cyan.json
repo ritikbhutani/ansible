@@ -86,9 +86,45 @@
               "zone_idx": 1
             },
             {
+              "description": "Keychron Gaming Keyboard 1",
+              "is_segment": false,
+              "location": "HID: /dev/hidraw4",
+              "name": "Keychron Gaming Keyboard 1",
+              "reverse": false,
+              "segment_idx": -1,
+              "self_brightness": 100,
+              "serial": "",
+              "vendor": "Keychron",
+              "version": "",
+              "zone_idx": 0
+            }
+          ],
+          "CustomName": "",
+          "CustomSettings": {
+            "mode": 0,
+            "thickness": 0
+          },
+          "EffectClassName": "RotatingBeam",
+          "FPS": 60,
+          "RandomColors": false,
+          "Slider2Val": 34,
+          "Speed": 20,
+          "Temperature": 0,
+          "Tint": 0,
+          "UserColors": [
+            16777045,
+            16711875
+          ]
+        },
+        {
+          "AllowOnlyFirst": false,
+          "AutoStart": true,
+          "Brightness": 100,
+          "ControllerZones": [
+            {
               "description": "IT5702-GIGABYTE V2.0.10.0",
               "is_segment": false,
-              "location": "HID: /dev/hidraw0",
+              "location": "HID: /dev/hidraw3",
               "name": "B550 AORUS PRO V2",
               "reverse": false,
               "segment_idx": -1,
@@ -101,7 +137,7 @@
             {
               "description": "IT5702-GIGABYTE V2.0.10.0",
               "is_segment": false,
-              "location": "HID: /dev/hidraw0",
+              "location": "HID: /dev/hidraw3",
               "name": "B550 AORUS PRO V2",
               "reverse": false,
               "segment_idx": -1,
@@ -149,30 +185,18 @@
               "vendor": "Gigabyte",
               "version": "2.0.10.0",
               "zone_idx": 6
-            },
-            {
-              "description": "Keychron Gaming Keyboard 1",
-              "is_segment": false,
-              "location": "HID: /dev/hidraw4",
-              "name": "Keychron Gaming Keyboard 1",
-              "reverse": false,
-              "segment_idx": -1,
-              "self_brightness": 100,
-              "serial": "",
-              "vendor": "Keychron",
-              "version": "",
-              "zone_idx": 0
             }
           ],
-          "CustomName": "",
+          "CustomName": "purple-cyan board",
           "CustomSettings": {
-            "mode": 0,
-            "thickness": 0
+            "WaveFrequency": 1,
+            "WaveSpeed": 50,
+            "OscillationSpeed": 100
           },
-          "EffectClassName": "RotatingBeam",
+          "EffectClassName": "Wavy",
           "FPS": 60,
           "RandomColors": false,
-          "Slider2Val": 34,
+          "Slider2Val": 0,
           "Speed": 20,
           "Temperature": 0,
           "Tint": 0,
