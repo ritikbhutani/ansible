@@ -1,0 +1,19 @@
+{
+    "AllowOnlyFirst": false,
+    "Brightness": 100,
+    "CustomSettings": {
+        "mode": 0,
+        "thickness": 0
+    },
+    "EffectClassName": "RotatingBeam",
+    "FPS": 60,
+    "RandomColors": false,
+    "Slider2Val": 34,
+    "Speed": 20,
+    "Temperature": 0,
+    "Tint": 0,
+    "UserColors": [
+        22015,
+        0
+    ]
+}

@@ -135,6 +135,18 @@
   become: false
   tags: *tags_serp
 
+# OpenRGB config: fan headers (B550 D_LED1/D_LED2 = 12 LEDs each; ARGB headers can't
+# auto-detect, and 0 means dark fans), the purple-cyan effect profile, and Effects plugin settings.
+# Copied, not stowed: OpenRGB rewrites these files itself. Never overwrites an existing setup.
+- name: Install OpenRGB config (zone sizes, profiles, Effects plugin settings)
+  ansible.builtin.copy:
+    src: openrgb/
+    dest: "{{ lookup('env', 'HOME') }}/.config/OpenRGB/"
+    force: no
+    mode: preserve
+  become: false
+  tags: *tags_serp
+
 - name: Enable nvim theme sync (follows serpantinum's palette)
   ansible.builtin.systemd:
     name: serp-theme-sync.path

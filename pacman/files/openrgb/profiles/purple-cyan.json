@@ -1,0 +1,138 @@
+{
+    "plugins": {
+        "OpenRGB Effects Plugin": {
+            "Effects": [
+                {
+                    "AllowOnlyFirst": false,
+                    "AutoStart": true,
+                    "Brightness": 100,
+                    "ControllerZones": [
+                        {
+                            "description": "ENE SMBus Device",
+                            "is_segment": false,
+                            "location": "I2C: /dev/i2c-5, address 0x70",
+                            "name": "ENE DRAM",
+                            "reverse": false,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "",
+                            "vendor": "ENE",
+                            "version": "AUDA0-E6K5-0101",
+                            "zone_idx": 0
+                        },
+                        {
+                            "description": "ENE SMBus Device",
+                            "is_segment": false,
+                            "location": "I2C: /dev/i2c-5, address 0x71",
+                            "name": "ENE DRAM",
+                            "reverse": false,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "",
+                            "vendor": "ENE",
+                            "version": "AUDA0-E6K5-0101",
+                            "zone_idx": 0
+                        },
+                        {
+                            "description": "ENE SMBus Device",
+                            "is_segment": false,
+                            "location": "I2C: /dev/i2c-5, address 0x72",
+                            "name": "ENE DRAM",
+                            "reverse": false,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "",
+                            "vendor": "ENE",
+                            "version": "AUDA0-E6K5-0101",
+                            "zone_idx": 0
+                        },
+                        {
+                            "description": "ENE SMBus Device",
+                            "is_segment": false,
+                            "location": "I2C: /dev/i2c-5, address 0x73",
+                            "name": "ENE DRAM",
+                            "reverse": false,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "",
+                            "vendor": "ENE",
+                            "version": "AUDA0-E6K5-0101",
+                            "zone_idx": 0
+                        },
+                        {
+                            "description": "IT5702-GIGABYTE V2.0.10.0",
+                            "is_segment": false,
+                            "location": "HID: /dev/hidraw0",
+                            "name": "B550 AORUS PRO V2",
+                            "reverse": false,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "0x57020100",
+                            "vendor": "Gigabyte",
+                            "version": "2.0.10.0",
+                            "zone_idx": 0
+                        },
+                        {
+                            "description": "IT5702-GIGABYTE V2.0.10.0",
+                            "is_segment": false,
+                            "location": "HID: /dev/hidraw0",
+                            "name": "B550 AORUS PRO V2",
+                            "reverse": false,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "0x57020100",
+                            "vendor": "Gigabyte",
+                            "version": "2.0.10.0",
+                            "zone_idx": 1
+                        },
+                        {
+                            "description": "IT5702-GIGABYTE V2.0.10.0",
+                            "is_segment": false,
+                            "location": "HID: /dev/hidraw0",
+                            "name": "B550 AORUS PRO V2",
+                            "reverse": false,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "0x57020100",
+                            "vendor": "Gigabyte",
+                            "version": "2.0.10.0",
+                            "zone_idx": 2
+                        },
+                        {
+                            "description": "IT5702-GIGABYTE V2.0.10.0",
+                            "is_segment": false,
+                            "location": "HID: /dev/hidraw0",
+                            "name": "B550 AORUS PRO V2",
+                            "reverse": false,
+                            "segment_idx": -1,
+                            "self_brightness": 100,
+                            "serial": "0x57020100",
+                            "vendor": "Gigabyte",
+                            "version": "2.0.10.0",
+                            "zone_idx": 3
+                        }
+                    ],
+                    "CustomName": "",
+                    "CustomSettings": {
+                        "mode": 0,
+                        "thickness": 0
+                    },
+                    "EffectClassName": "RotatingBeam",
+                    "FPS": 60,
+                    "RandomColors": false,
+                    "Slider2Val": 34,
+                    "Speed": 20,
+                    "Temperature": 0,
+                    "Tint": 0,
+                    "UserColors": [
+                        16777045,
+                        16711875
+                    ]
+                }
+            ],
+            "version": 2
+        }
+    },
+    "profile_name": "purple-cyan",
+    "profile_version": 6
+}
