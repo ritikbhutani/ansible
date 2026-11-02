@@ -135,7 +135,7 @@
   become: false
   tags: *tags_serp
 
-- name: Enable theme sync (nvim + OpenRGB follow serpantinum's palette)
+- name: Enable nvim theme sync (follows serpantinum's palette)
   ansible.builtin.systemd:
     name: serp-theme-sync.path
     scope: user
