@@ -102,8 +102,25 @@
     set -e
     s="$HOME/.config/serpantinum/settings.json"
     mkdir -p "$(dirname "$s")"; [ -s "$s" ] || echo '{}' > "$s"
-    jq -s --arg wp "$HOME/Pictures/Wallpapers" '(.[0] * .[1]) * {wallpaperDir: $wp}' \
+    jq -s --arg wp "$HOME/Pictures/Wallpapers/4k" '(.[0] * .[1]) * {wallpaperDir: $wp}' \
       /usr/share/serpantinum/config/serpantinum/settings.json "$s" > "$s.tmp" && mv "$s.tmp" "$s"
+  become: false
+  tags: *tags_serp
+
+- name: Create 4K wallpaper folder
+  ansible.builtin.file:
+    path: "{{ lookup('env', 'HOME') }}/Pictures/Wallpapers/4k"
+    state: directory
+    mode: "0755"
+  become: false
+  tags: *tags_serp
+
+- name: Install default wallpaper (applied once on first login by serp-default-wallpaper)
+  ansible.builtin.copy:
+    src: "wallpapers/{{ default_wallpaper }}"
+    dest: "{{ lookup('env', 'HOME') }}/Pictures/Wallpapers/4k/{{ default_wallpaper }}"
+    force: no
+    mode: "0644"
   become: false
   tags: *tags_serp
 
