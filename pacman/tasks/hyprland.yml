@@ -107,11 +107,12 @@
   become: false
   tags: *tags_serp
 
-- name: Create 4K wallpaper folder
+- name: Create wallpaper folders (4k = picker folder, vertical = per-monitor crops)
   ansible.builtin.file:
-    path: "{{ lookup('env', 'HOME') }}/Pictures/Wallpapers/4k"
+    path: "{{ lookup('env', 'HOME') }}/Pictures/Wallpapers/{{ item }}"
     state: directory
     mode: "0755"
+  loop: [4k, vertical]
   become: false
   tags: *tags_serp
 
@@ -119,6 +120,15 @@
   ansible.builtin.copy:
     src: "wallpapers/{{ default_wallpaper }}"
     dest: "{{ lookup('env', 'HOME') }}/Pictures/Wallpapers/4k/{{ default_wallpaper }}"
+    force: no
+    mode: "0644"
+  become: false
+  tags: *tags_serp
+
+- name: Install portrait-monitor crop of the default wallpaper (HDMI-A-1, shifted right)
+  ansible.builtin.copy:
+    src: "wallpapers/{{ default_wallpaper_vertical }}"
+    dest: "{{ lookup('env', 'HOME') }}/Pictures/Wallpapers/vertical/{{ default_wallpaper_vertical }}"
     force: no
     mode: "0644"
   become: false

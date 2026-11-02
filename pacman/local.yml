@@ -7,6 +7,7 @@
     serpantinum_src: "{{ lookup('env', 'HOME') }}/src/serpantinum"
     serpantinum_pkgbuild: "{{ serpantinum_src }}/packaging/aur/serpantinum-git/PKGBUILD"
     default_wallpaper: ddg_1776373765829978071.jpg
+    default_wallpaper_vertical: ddg_1776373765829978071_HDMI-A-1.jpg
 
   pre_tasks:
     - name: Update Pacman package database
