@@ -51,6 +51,7 @@
   ansible.builtin.command: >
     yay -S --needed --noconfirm
     wl-gammarelay-rs matugen-bin zen-browser-bin catppuccin-gtk-theme-mocha
+    openrgb-plugin-effects
   register: yay_install
   changed_when: "'there is nothing to do' not in yay_install.stdout"
   become: false
@@ -134,9 +135,9 @@
   become: false
   tags: *tags_serp
 
-- name: Enable nvim colour sync for serpantinum palette changes
+- name: Enable theme sync (nvim + OpenRGB follow serpantinum's palette)
   ansible.builtin.systemd:
-    name: serp-nvim-colors.path
+    name: serp-theme-sync.path
     scope: user
     enabled: yes
     state: started
